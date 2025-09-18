@@ -1,5 +1,6 @@
 const Ride = require("../models/Ride");
 const User = require("../models/User");
+const { validateTransition } = require("../utils/rideStateMachine");
 
 // @desc    Request a new ride
 // @route   POST /api/rides
@@ -64,10 +65,12 @@ exports.acceptRide = async (req, res) => {
       });
     }
 
-    if (ride.status !== "requested") {
+    try {
+      validateTransition(ride.status, "accepted");
+    } catch (err) {
       return res.status(400).json({
         success: false,
-        message: "Ride is not in requested state",
+        message: err.message,
       });
     }
 
@@ -77,7 +80,7 @@ exports.acceptRide = async (req, res) => {
     await ride.save();
 
     res.json({
-      succes: true,
+      success: true,
       ride,
     });
   } catch (err) {
@@ -98,21 +101,23 @@ exports.completedRide = async (req, res) => {
 
     if (!ride) {
       return res.status(404).json({
-        succes: false,
+        success: false,
         message: "Ride not found",
       });
     }
 
-    if (ride.status !== "accepted") {
+    try {
+      validateTransition(ride.status, "completed");
+    } catch (err) {
       return res.status(400).json({
-        succes: false,
-        message: "Ride must be accepted first",
+        success: false,
+        message: err.message,
       });
     }
 
     if (ride.driver.toString() !== req.user.id) {
       return res.status(401).json({
-        succes: false,
+        success: false,
         message: "Not authorized to complete this ride",
       });
     }
@@ -122,7 +127,7 @@ exports.completedRide = async (req, res) => {
     await ride.save();
 
     res.json({
-      succes: true,
+      success: true,
       ride,
     });
   } catch (err) {
