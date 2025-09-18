@@ -38,7 +38,7 @@ exports.requestRide = async (req, res) => {
 exports.getRequestedRides = async (req, res) => {
   try {
     const rides = await Ride.find({
-      statud: "requested",
+      status: "requested",
     }).populate("rider", "name email");
     res.json(rides);
   } catch (err) {
