@@ -12,7 +12,7 @@ connectDB();
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/auth"));
-
+app.use("/api/rides", require("./routes/rides"));
 // Simple Hello World route
 app.get("/", (req, res) => {
   res.status(200).json({
