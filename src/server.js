@@ -11,6 +11,8 @@ connectDB();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+app.use("/api/auth", require("./routes/auth"));
+
 // Simple Hello World route
 app.get("/", (req, res) => {
   res.status(200).json({
