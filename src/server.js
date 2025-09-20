@@ -1,3 +1,6 @@
+const helmet = require("helmet");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
@@ -23,6 +26,16 @@ app.get("/", (req, res) => {
 });
 
 app.use(require("./middleware/errorHandler"));
+
+// Security Middlewares
+app.use(helmet());
+app.use(cors());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests from this IP, please try again later.",
+});
+app.use(limiter);
 
 // Start the server
 app.listen(PORT, () => {
