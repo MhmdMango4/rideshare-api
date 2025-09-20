@@ -2,35 +2,53 @@ const Ride = require("../models/Ride");
 const User = require("../models/User");
 const { validateTransition } = require("../utils/rideStateMachine");
 
+const { body, param } = require("express-validator");
+const validate = require("../middleware/validate");
+
+// Validate for requestride
+exports.requestRideValidation = [
+  body("pickup").trim().notEmpty().withMessage("Pickup location is required"),
+  body("destination").trim().notEmpty().withMessage("Destination is required"),
+  body("price")
+    .isNumeric()
+    .withMessage("Price must be a number")
+    .isFloat({ min: 0 })
+    .withMessage("Price cannot be negative"),
+];
+
 // @desc    Request a new ride
 // @route   POST /api/rides
 // @access  Private (Rider)
-exports.requestRide = async (req, res) => {
-  const { pickup, destination, price } = req.body;
+exports.requestRide = [
+  ...exports.requestRideValidation,
+  validate,
+  async (req, res) => {
+    const { pickup, destination, price } = req.body;
 
-  try {
-    const newRide = new Ride({
-      rider: req.user.id,
-      pickup,
-      destination,
-      price,
-      status: "requested",
-    });
+    try {
+      const newRide = new Ride({
+        rider: req.user.id,
+        pickup,
+        destination,
+        price,
+        status: "requested",
+      });
 
-    const ride = await newRide.save();
+      const ride = await newRide.save();
 
-    res.status(201).json({
-      success: true,
-      ride,
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-};
+      res.status(201).json({
+        success: true,
+        ride,
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+    }
+  },
+];
 
 // @desc    Get all requested rides (for drivers)
 // @route   GET /api/rides/requested

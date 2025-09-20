@@ -22,6 +22,8 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use(require("./middleware/errorHandler"));
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`🚀 RideShare API running on http://localhost:${PORT}`);
