@@ -138,3 +138,50 @@ exports.completedRide = async (req, res) => {
     });
   }
 };
+
+// @desc    Get all rides (Admin only)
+// @route   GET /api/rides
+// @access  Private (Admin)
+exports.getAllRides = async (req, res) => {
+  try {
+    const rides = await Ride.find()
+      .populate("rider", "name email")
+      .populate("driver", "name email");
+    res.json(rides);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+// @desc    Delete a ride (Admin only)
+// @route   DELETE /api/rides/:id
+// @access  Private (Admin)
+exports.deleteRide = async (req, res) => {
+  try {
+    const ride = await Ride.findById(req.params.id);
+
+    if (!ride) {
+      return res.status(404).json({
+        success: false,
+        message: "Ride not found",
+      });
+    }
+
+    await ride.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "Ride removed",
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
