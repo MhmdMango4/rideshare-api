@@ -15,7 +15,5 @@ A production-ready Node.js/Express REST API for a ride-sharing service (like Ube
 
 ## Getting Started
 
-```bash
-npm install
-npm run dev
-```
+✅ Live on Render: https://rideshare-api-n9qs.onrender.com/
+✅ Interactive Docs: https://rideshare-api-n9qs.onrender.com/api-docs/
