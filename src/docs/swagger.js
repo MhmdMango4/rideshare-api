@@ -20,6 +20,10 @@ const swaggerDefinition = {
       url: "http://localhost:5000",
       description: "Development server",
     },
+    {
+      url: "https://rideshare-api-n9qs.onrender.com",
+      description: "Production server",
+    },
   ],
   components: {
     securitySchemes: {

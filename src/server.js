@@ -34,6 +34,8 @@ app.get("/", (req, res) => {
     success: "success",
     message: "Hello World from RideShare API",
     timestamp: new Date().toISOString(),
+    documentation: "https://rideshare-api-n9qs.onrender.com/api-docs/",
+    author: "Mohammed Mango",
   });
 });
 
