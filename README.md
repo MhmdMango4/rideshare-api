@@ -9,7 +9,6 @@ A production-ready Node.js/Express REST API for a ride-sharing service (like Ube
 - Request, accept, complete rides
 - Ride history
 - Swagger docs
-- Jest tests
 - CI/CD with GitHub Actions
 - Deployed on Render
 
